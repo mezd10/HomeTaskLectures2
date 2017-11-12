@@ -1,5 +1,8 @@
+import BinaryTree.BinaryTreeIterator
 import org.junit.Assert
 import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class BinaryTreeTest {
 
@@ -31,6 +34,39 @@ class BinaryTreeTest {
 
     @Test
     fun remove()  {
+
+        val tree0 = BinaryTree<Int>()
+        tree0.add(4)
+        tree0.add(57)
+        tree0.add(19)
+        tree0.add(12)
+        tree0.add(14)
+        tree0.add(63)
+        tree0.add(21)
+        tree0.add(36)
+        tree0.add(13)
+        tree0.add(64)
+        tree0.add(81)
+        tree0.add(64)
+        tree0.add(46)
+        tree0.add(3)
+        tree0.add(19)
+        tree0.add(32)
+        tree0.add(1)
+        tree0.add(83)
+        tree0.add(60)
+        tree0.add(98)
+
+        Assert.assertFalse(tree0.remove(35))
+
+        tree0.remove(81)
+        Assert.assertEquals(1, tree0.first())
+        Assert.assertEquals(98, tree0.last())
+        Assert.assertEquals(17, tree0.size)
+        Assert.assertFalse(tree0.contains(81))
+        Assert.assertTrue(tree0.checkInvariant())
+
+
         val tree1 = BinaryTree<Int>()
         tree1.add(3)
         tree1.add(8)

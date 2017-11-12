@@ -63,6 +63,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         @SuppressWarnings("unchecked")
         Node<T> treeEl = find((T) o);
 
+        if (treeEl == null || treeEl.value != o) {
+            return false;
+        }
+
         if (treeEl.left == null && treeEl.right == null) {
 
             del(treeEl, null);
@@ -80,59 +84,64 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         if (treeEl.right != null && treeEl.left != null) {
 
-            Node<T> last = findLast(treeEl);
             Node<T> parent = findParent(treeEl.value);
-            Node<T> parentLast = null;
-
-            if (last != null) {
-                parentLast = findParent(last.value);
-            }
 
             if (parent == null) {
-
-                if (last != null) {
-                    parentLast.left = last.right;
-                    last.left = treeEl.left;
-                    last.right = treeEl.right;
-                    root = last;
-                }
-                else {
-                    treeEl.right.left = root.left;
-                    root = treeEl.right;
-                }
-
-                size --;
+                twoVertex(treeEl);
+                size--;
                 return true;
             }
 
-            if (parent.left.value.compareTo(treeEl.value) == 0) {
-                if (last != null) {
-                    parentLast.left = last.right;
-                    last.left = treeEl.left;
-                    last.right = treeEl.right;
-                    parent.left = last;
-                }
-                else {
-                    parent.left = treeEl.right;
-                    treeEl.right.left = treeEl.left;
-                }
-            }
-            if (parent.right.value.compareTo(treeEl.value) == 0) {
-
-                if (last != null) {
-                    parentLast.left = last.right;
-                    last.left = treeEl.left;
-                    last.right = treeEl.right;
-                    parent.right = last;
-                }
-                else {
-                    parent.right = treeEl.right;
-                    treeEl.right.left = treeEl.left;
-                }
+            else {
+                twoVertex(treeEl);
             }
         }
         size --;
         return true;
+    }
+
+    private void twoVertex(Node<T> treeEl) {
+
+        Node<T> last = findLast(treeEl);
+        Node<T> parent = findParent(treeEl.value);
+        Node<T> parentLast = null;
+
+        if (last != null) {
+            parentLast = findParent(last.value);
+            parentLast.left = last.right;
+            last.left = treeEl.left;
+            last.right = treeEl.right;
+
+            if (parent == null) {
+                root = last;
+            }
+
+            if (parent != null && parent.left.value.compareTo(treeEl.value) == 0) {
+                parent.left = last;
+            }
+
+            if (parent != null && parent.right.value.compareTo(treeEl.value) == 0) {
+                parent.right = last;
+            }
+        }
+        else {
+            if (parent == null) {
+                treeEl.right.left = root.left;
+                root = treeEl.right;
+            }
+
+            if (parent != null && parent.left.value.compareTo(treeEl.value) == 0) {
+                parent.left = treeEl.right;
+                treeEl.right.left = treeEl.left;
+            }
+
+            if (parent != null && parent.right.value.compareTo(treeEl.value) == 0) {
+                parent.right = treeEl.right;
+                treeEl.right.left = treeEl.left;
+            }
+
+        }
+
     }
 
     private void del(Node<T> node, Node<T> newNode) {
@@ -214,12 +223,16 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
-        private BinaryTreeIterator() {}
+        private BinaryTreeIterator() {
+
+            current = root;
+        }
 
         private Node<T> findNext() {
             if (current.right != null){
                 return findMin(current);
             }
+
             else if (current.value.compareTo(findParentForNext(current).value) < 0) {
                 return findParentForNext(current);
             }
@@ -231,6 +244,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             while(current.left != null) current = current.left;
             return current;
         }
+
 
         private Node<T> findParentForNext(Node<T> son){
             Node<T> current = root;
