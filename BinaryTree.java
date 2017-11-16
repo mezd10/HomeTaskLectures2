@@ -223,40 +223,33 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
+        private Stack<Node<T>> stack;
+
         private BinaryTreeIterator() {
 
+            stack = new Stack<>();
             current = root;
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
         }
 
         private Node<T> findNext() {
-            if (current.right != null){
-                return findMin(current);
+
+            if (!stack.isEmpty()) {
+                Node<T> currentNode = stack.pop();
+                if (currentNode.right != null) {
+                    while (currentNode.right != null) {
+                        stack.push(currentNode.right);
+                        currentNode.right = currentNode.right.left;
+                    }
+                }
+                return currentNode;
             }
-
-            else if (current.value.compareTo(findParentForNext(current).value) < 0) {
-                return findParentForNext(current);
+            else {
+                return null;
             }
-            return null;
-        }
-
-        private Node<T> findMin(Node<T> current){
-            current = current.right;
-            while(current.left != null) current = current.left;
-            return current;
-        }
-
-
-        private Node<T> findParentForNext(Node<T> son){
-            Node<T> current = root;
-
-            if (current.value.compareTo(son.value) > 0 && current.left.value != son.value) {
-                current = current.left;
-            }
-            else if (current.value.compareTo(son.value) < 0 && current.right.value != son.value) {
-                current = current.right;
-            }
-
-            return current;
         }
 
         @Override

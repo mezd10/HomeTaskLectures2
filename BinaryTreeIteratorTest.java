@@ -1,12 +1,9 @@
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BinaryTreeIteratorTest {
 
@@ -23,14 +20,17 @@ public class BinaryTreeIteratorTest {
     @Test
     public void findNext() {
 
-        Iterator<Integer> iter = tree.iterator();
-        Integer currentValue, nextValue;
-        nextValue = iter.next();
+        Iterator<Integer> iterator = tree.iterator();
 
-        while (iter.hasNext()) {
-            currentValue = nextValue;
-            nextValue = iter.next();
-            assertTrue( nextValue.compareTo(currentValue) > 0);
-        }
+        assertEquals(1, (int) iterator.next());
+        assertEquals(2, (int) iterator.next());
+        assertEquals(3, (int) iterator.next());
+        assertEquals(5, (int) iterator.next());
+        assertEquals(6, (int) iterator.next());
+        assertEquals(8, (int) iterator.next());
+        assertEquals(18, (int) iterator.next());
+        assertEquals(20, (int) iterator.next());
+        assertEquals(99, (int) iterator.next());
+        assertThrows(NoSuchElementException.class, iterator::next);
     }
 }
